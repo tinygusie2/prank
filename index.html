@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ancestry Reveal</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 1em;
+    }
+
+    #reveal-message {
+      font-size: 1.2em;
+      margin-bottom: 1em;
+    }
+
+    #reveal-message span {
+      font-weight: bold; /* Highlight countdown text */
+    }
+
+    #reveal-button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Discover Your Ancestry</h1>
+  <p id="reveal-message">Hold the button below to unlock your ancestral secrets! </p>
+  <button id="reveal-button">Reveal My Ancestry</button>
+  <audio id="reveal-sound" src="prank.mp3" preload="hidden"></audio>
+  <script>
+    const button = document.getElementById('reveal-button');
+    const revealSound = document.getElementById('reveal-sound');
+    const revealMessage = document.getElementById('reveal-message');
+    const countdownDisplay = document.createElement('span'); // Create element for countdown display
+    revealMessage.appendChild(countdownDisplay); // Append countdown display to reveal message
+
+    let buttonHoldStart;
+    let countdownInterval;
+
+    button.addEventListener('mousedown', () => {
+      buttonHoldStart = Date.now();
+      revealMessage.textContent = 'Unearthing your genetic history... ';
+      countdownDisplay.textContent = ' (10)'; // Initial countdown display
+
+      countdownInterval = setInterval(() => {
+        const holdTime = Date.now() - buttonHoldStart;
+        const remainingTime = Math.max(0, 10000 - holdTime); // Ensure no negative countdown
+        const secondsLeft = Math.floor(remainingTime / 1000);
+        countdownDisplay.textContent = ` ( ${secondsLeft} )`;
+
+        if (secondsLeft === 0) {
+          clearInterval(countdownInterval); // Stop countdown
+          revealMessage.textContent = 'Ancestry revealed!';
+          revealSound.play();
+        }
+      }, 1000); // Update countdown every second
+    });
+
+    button.addEventListener('mouseup', () => {
+      if (countdownInterval) { // Check if countdown is active
+        clearInterval(countdownInterval); // Stop countdown if button released early
+      }
+    });
+  </script>
+</body>
+</html>
